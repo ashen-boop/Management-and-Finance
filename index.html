@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📸 Sarah's Photography - Accounting System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4F46E5;
+            --primary-light: #818CF8;
+            --primary-dark: #3730A3;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --gray-900: #0F172A;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --radius-lg: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--gray-100); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 10px; }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 2rem;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--gray-900);
+        }
+
+        .navbar .logo i {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .navbar .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .navbar .nav-actions .toggle-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 28px;
+            background: var(--gray-300);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch.active {
+            background: var(--primary);
+        }
+
+        .toggle-switch .knob {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: var(--shadow);
+        }
+
+        .toggle-switch.active .knob {
+            transform: translateX(20px);
+        }
+
+        .nav-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .app-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 24px 32px;
+        }
+
+        /* ===== KPI ROW ===== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-100);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .kpi-card .label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-500);
+            margin-bottom: 6px;
+        }
+
+        .kpi-card .value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .kpi-card .sub {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        .kpi-card .badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-left: 8px;
+        }
+
+        .badge-success { background: #D1FAE5; color: #065F46; }
+        .badge-warning { background: #FEF3C7; color: #92400E; }
+        .badge-danger { background: #FEE2E2; color: #991B1B; }
+
+        /* ===== TOOLBAR ===== */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .toolbar .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            border-color: #059669;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--gray-300);
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+        }
+
+        /* ===== SECTION CARDS ===== */
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-100);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .card-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .card-header .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius-lg);
+            max-width: 780px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from { opacity: 0; transform: scale(0.96) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 2;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        .modal-header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--gray-100);
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--gray-200);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background: var(--gray-50);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        }
+
+        /* ===== FORM ===== */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--gray-700);
+            margin-bottom: 5px;
+        }
+
+        .form-group .helper {
+            font-size: 0.75rem;
+            color: var(--gray-400);
+            font-weight: 400;
+            margin-left: 4px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border 0.2s, box-shadow 0.2s;
+            background: white;
+            color: var(--gray-900);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394A3B8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        .transaction-type-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .type-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--gray-200);
+            background: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            color: var(--gray-600);
+        }
+
+        .type-chip:hover {
+            border-color: var(--gray-400);
+        }
+
+        .type-chip.active {
+            border-color: var(--primary);
+            background: #EEF2FF;
+            color: var(--primary);
+        }
+
+        /* ===== HIERARCHICAL SELECT ===== */
+        .hierarchical-select {
+            position: relative;
+        }
+
+        .hierarchical-select select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: white;
+            color: var(--gray-900);
+            transition: border 0.2s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394A3B8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        .hierarchical-select select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+        }
+
+        .hierarchical-select optgroup {
+            font-weight: 700;
+            color: var(--gray-700);
+        }
+
+        .hierarchical-select option {
+            padding: 4px 8px;
+            font-weight: 400;
+            color: var(--gray-600);
+        }
+
+        .hierarchical-select option[disabled] {
+            color: var(--gray-400);
+            font-style: italic;
+        }
+
+        /* ===== DOUBLE ENTRY PREVIEW ===== */
+        .entry-preview {
+            background: var(--gray-50);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            border: 1px solid var(--gray-200);
+            margin-top: 8px;
+        }
+
+        .entry-preview table {
+            width: 100%;
+            font-size: 0.85rem;
+            border-collapse: collapse;
+        }
+
+        .entry-preview th {
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-500);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .entry-preview td {
+            padding: 6px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .entry-preview .balance-row {
+            font-weight: 700;
+            border-top: 2px solid var(--gray-300);
+            padding-top: 8px;
+        }
+
+        .entry-preview .balanced {
+            color: var(--success);
+        }
+
+        .entry-preview .unbalanced {
+            color: var(--danger);
+        }
+
+        /* ===== DATA TABLES ===== */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table.data-table {
+            width: 100%;
+            font-size: 0.875rem;
+            border-collapse: collapse;
+        }
+
+        table.data-table th {
+            text-align: left;
+            padding: 10px 12px;
+            font-weight: 600;
+            color: var(--gray-500);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        table.data-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        table.data-table tr:hover td {
+            background: var(--gray-50);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .status-paid { background: #D1FAE5; color: #065F46; }
+        .status-unpaid { background: #FEF3C7; color: #92400E; }
+        .status-overdue { background: #FEE2E2; color: #991B1B; }
+        .status-reconciled { background: #DBEAFE; color: #1E40AF; }
+
+        /* ===== P&L WITH HIERARCHY ===== */
+        .pl-full {
+            font-size: 0.875rem;
+        }
+
+        .pl-section {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .pl-section:last-child {
+            border-bottom: none;
+        }
+
+        .pl-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+        }
+
+        .pl-row .label {
+            color: var(--gray-600);
+        }
+
+        .pl-row .value {
+            font-weight: 600;
+        }
+
+        .pl-subsection {
+            padding-left: 24px;
+        }
+
+        .pl-subsubsection {
+            padding-left: 48px;
+        }
+
+        .pl-total {
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding-top: 12px;
+            border-top: 2px solid var(--gray-200);
+            margin-top: 8px;
+        }
+
+        .pl-group-header {
+            font-weight: 700;
+            color: var(--gray-800);
+            padding: 8px 0 4px 0;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 4px;
+        }
+
+        .pl-expense-category {
+            font-weight: 600;
+            color: var(--gray-700);
+            padding-top: 6px;
+        }
+
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+        .text-primary { color: var(--primary); }
+        .text-muted { color: var(--gray-500); }
+        .fw-600 { font-weight: 600; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .pl-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 16px;
+            }
+
+            .navbar {
+                padding: 0 16px;
+                height: 64px;
+            }
+
+            .navbar .logo span {
+                display: none;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .toolbar .left {
+                width: 100%;
+            }
+
+            .toolbar .left .btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .modal {
+                max-width: 100%;
+                margin: 10px;
+                max-height: 95vh;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .transaction-type-group {
+                gap: 6px;
+            }
+
+            .type-chip {
+                font-size: 0.7rem;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-card .value {
+                font-size: 1.4rem;
+            }
+
+            .navbar .nav-actions .toggle-label {
+                display: none;
+            }
+        }
+
+        /* ===== RECONCILIATION ===== */
+        .reconcile-diff {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            background: #FEF3C7;
+            border: 1px solid #F59E0B;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .reconcile-diff .amount {
+            font-weight: 700;
+            color: #92400E;
+        }
+
+        .reconcile-match {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .reconcile-column {
+            background: var(--gray-50);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+        }
+
+        .reconcile-column h4 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .reconcile-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .reconcile-item:hover {
+            background: white;
+        }
+
+        .reconcile-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .reconcile-match {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .color-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .dot-operating { background: #3B82F6; }
+        .dot-distribution { background: #F59E0B; }
+        .dot-finance { background: #10B981; }
+        .dot-other { background: #8B5CF6; }
+    </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+    <div class="logo">
+        <i class="fas fa-camera"></i>
+        <span>Sarah's Photography Studio</span>
+    </div>
+    <div class="nav-actions">
+        <span class="toggle-label">Accrual</span>
+        <div class="toggle-switch active" id="basisToggle" onclick="toggleBasis()">
+            <div class="knob"></div>
+        </div>
+        <span class="toggle-label">Cash</span>
+        <div class="nav-avatar">S</div>
+    </div>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<div class="app-container">
+
+    <!-- KPI ROW -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="label">💰 Bank Balance</div>
+            <div class="value">$12,450.00</div>
+            <div class="sub"><span class="text-success">▲ +2.4%</span> from last month</div>
+        </div>
+        <div class="kpi-card">
+            <div class="label">💳 Accounts Receivable</div>
+            <div class="value">$3,200.00</div>
+            <div class="sub"><span class="badge badge-warning">2 overdue</span></div>
+        </div>
+        <div class="kpi-card">
+            <div class="label">📦 Low Stock Items</div>
+            <div class="value">3</div>
+            <div class="sub"><span class="badge badge-danger">Reorder now</span></div>
+        </div>
+        <div class="kpi-card">
+            <div class="label">📈 Today's Net Profit</div>
+            <div class="value text-success">+$1,250.00</div>
+            <div class="sub">Accrual basis · <span class="text-muted">$850 cash</span></div>
+        </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <div class="left">
+            <button class="btn btn-primary" onclick="openModal('transactionModal')">
+                <i class="fas fa-plus"></i> New Transaction
+            </button>
+            <button class="btn btn-success" onclick="openModal('invoiceModal')">
+                <i class="fas fa-file-invoice"></i> New Invoice
+            </button>
+            <button class="btn" onclick="openModal('reconcileModal')">
+                <i class="fas fa-check-double"></i> Reconcile
+            </button>
+            <button class="btn">
+                <i class="fas fa-file-pdf"></i> Export
+            </button>
+        </div>
+        <div>
+            <span class="text-muted" style="font-size:0.8rem;">August 2026</span>
+        </div>
+    </div>
+
+    <!-- ===== TRANSACTION FEED ===== -->
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-list-ul" style="color:var(--primary);margin-right:8px;"></i> Today's Activity</h3>
+            <div class="actions">
+                <button class="btn btn-sm btn-outline"><i class="fas fa-filter"></i> Filter</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Client / Vendor</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>08:45 AM</td>
+                            <td><span class="status-badge status-paid">Income</span></td>
+                            <td>Wedding</td>
+                            <td>Final Payment</td>
+                            <td>Sarah Johnson</td>
+                            <td class="text-success fw-600">+$1,500.00</td>
+                            <td><span class="status-badge status-reconciled">Reconciled</span></td>
+                        </tr>
+                        <tr>
+                            <td>09:30 AM</td>
+                            <td><span class="status-badge status-unpaid">Expense</span></td>
+                            <td>Distribution</td>
+                            <td>Social Media Ads</td>
+                            <td>Meta/Facebook</td>
+                            <td class="text-danger fw-600">-$800.00</td>
+                            <td><span class="status-badge status-unpaid">Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td>11:15 AM</td>
+                            <td><span class="status-badge" style="background:#DBEAFE;color:#1E40AF;">COGS</span></td>
+                            <td>COGS</td>
+                            <td>Stock Allocation - 12x16 Canvas (3)</td>
+                            <td>Thompson Family</td>
+                            <td class="text-danger fw-600">-$135.00</td>
+                            <td><span class="status-badge status-reconciled">Reconciled</span></td>
+                        </tr>
+                        <tr>
+                            <td>02:00 PM</td>
+                            <td><span class="status-badge status-paid">Income</span></td>
+                            <td>Portrait</td>
+                            <td>Portrait Session</td>
+                            <td>Emily Davis</td>
+                            <td class="text-success fw-600">+$850.00</td>
+                            <td><span class="status-badge status-unpaid">Unreconciled</span></td>
+                        </tr>
+                        <tr>
+                            <td>04:20 PM</td>
+                            <td><span class="status-badge status-overdue">Expense</span></td>
+                            <td>Operating</td>
+                            <td>Studio Rent</td>
+                            <td>Landlord</td>
+                            <td class="text-danger fw-600">-$900.00</td>
+                            <td><span class="status-badge status-overdue">Overdue</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FULL P&L WITH HIERARCHY ===== -->
+    <div class="card">
+        <div class="card-header">
+            <h3><i class="fas fa-chart-pie" style="color:var(--primary);margin-right:8px;"></i> Profit & Loss Statement</h3>
+            <div class="actions">
+                <span class="text-muted" style="font-size:0.75rem;">Accrual · August 2026</span>
+                <button class="btn btn-sm btn-outline"><i class="fas fa-print"></i> Print</button>
+                <button class="btn btn-sm btn-primary"><i class="fas fa-lock"></i> Close Month</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="pl-full">
+
+                <!-- INCOME -->
+                <div class="pl-section">
+                    <div class="pl-group-header">📈 INCOME</div>
+                    <div class="pl-row"><span class="label">Wedding Photography</span><span class="value text-success">$8,500.00</span></div>
+                    <div class="pl-row"><span class="label">Portrait Sessions</span><span class="value text-success">$3,200.00</span></div>
+                    <div class="pl-row"><span class="label">Commercial Work</span><span class="value text-success">$1,500.00</span></div>
+                    <div class="pl-row"><span class="label">Print/Album Sales</span><span class="value text-success">$1,800.00</span></div>
+                    <div class="pl-row"><span class="label">Other Income</span><span class="value text-success">$200.00</span></div>
+                    <div class="pl-row" style="font-weight:700;border-top:2px solid var(--gray-200);padding-top:8px;margin-top:4px;">
+                        <span>TOTAL INCOME</span>
+                        <span class="text-success">$17,200.00</span>
+                    </div>
+                </div>
+
+                <!-- COGS -->
+                <div class="pl-section">
+                    <div class="pl-group-header">📦 COST OF GOODS SOLD (COGS)</div>
+                    <div class="pl-row"><span class="label">Lab/Printing Costs</span><span class="value text-danger">-$540.00</span></div>
+                    <div class="pl-row"><span class="label">Second Shooters</span><span class="value text-danger">-$850.00</span></div>
+                    <div class="pl-row"><span class="label">Direct Materials</span><span class="value text-danger">-$310.00</span></div>
+                    <div class="pl-row"><span class="label">Equipment Rental</span><span class="value text-danger">-$120.00</span></div>
+                    <div class="pl-row" style="font-weight:700;border-top:2px solid var(--gray-200);padding-top:8px;margin-top:4px;">
+                        <span>TOTAL COGS</span>
+                        <span class="text-danger">-$1,820.00</span>
+                    </div>
+                </div>
+
+                <!-- GROSS PROFIT -->
+                <div class="pl-section" style="background:#EEF2FF;border-radius:var(--radius-sm);padding:12px 16px;margin:8px 0;">
+                    <div class="pl-row" style="font-size:1.1rem;">
+                        <span><strong>⭐ GROSS PROFIT</strong></span>
+                        <span class="text-success"><strong>$15,380.00</strong></span>
+                    </div>
+                    <div class="pl-row text-muted" style="font-size:0.8rem;">
+                        <span>Gross Margin</span>
+                        <span>89.4%</span>
+                    </div>
+                </div>
+
+                <!-- OPERATING EXPENSES -->
+                <div class="pl-section">
+                    <div class="pl-group-header">🏢 OPERATING EXPENSES (SG&A)</div>
+                    
+                    <div class="pl-expense-category"><span class="color-dot dot-operating"></span> Studio & Facilities</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Studio Rent</span><span class="value text-danger">-$900.00</span></div>
+                        <div class="pl-row"><span class="label">Utilities</span><span class="value text-danger">-$210.00</span></div>
+                        <div class="pl-row"><span class="label">Studio Maintenance</span><span class="value text-danger">-$65.00</span></div>
+                        <div class="pl-row"><span class="label">Property Insurance</span><span class="value text-danger">-$120.00</span></div>
+                    </div>
+
+                    <div class="pl-expense-category" style="margin-top:6px;"><span class="color-dot dot-operating"></span> Office & Administration</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Software Subscriptions</span><span class="value text-danger">-$150.00</span></div>
+                        <div class="pl-row"><span class="label">Professional Services</span><span class="value text-danger">-$350.00</span></div>
+                        <div class="pl-row"><span class="label">Office Supplies</span><span class="value text-danger">-$75.00</span></div>
+                        <div class="pl-row"><span class="label">Bank Fees</span><span class="value text-danger">-$85.00</span></div>
+                        <div class="pl-row"><span class="label">Insurance</span><span class="value text-danger">-$200.00</span></div>
+                        <div class="pl-row"><span class="label">Postage & Shipping</span><span class="value text-danger">-$45.00</span></div>
+                    </div>
+
+                    <div class="pl-expense-category" style="margin-top:6px;"><span class="color-dot dot-operating"></span> Staff & HR</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Salaries & Wages</span><span class="value text-danger">-$450.00</span></div>
+                        <div class="pl-row"><span class="label">Payroll Taxes</span><span class="value text-danger">-$60.00</span></div>
+                        <div class="pl-row"><span class="label">Training & Development</span><span class="value text-danger">-$50.00</span></div>
+                    </div>
+
+                    <div class="pl-expense-category" style="margin-top:6px;"><span class="color-dot dot-operating"></span> General</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Membership Dues</span><span class="value text-danger">-$40.00</span></div>
+                        <div class="pl-row"><span class="label">Subscriptions</span><span class="value text-danger">-$25.00</span></div>
+                    </div>
+
+                    <div class="pl-row" style="font-weight:700;border-top:2px solid var(--gray-200);padding-top:8px;margin-top:6px;">
+                        <span>TOTAL OPERATING EXPENSES</span>
+                        <span class="text-danger">-$2,775.00</span>
+                    </div>
+                </div>
+
+                <!-- DISTRIBUTION & MARKETING -->
+                <div class="pl-section">
+                    <div class="pl-group-header">📦 DISTRIBUTION & MARKETING</div>
+
+                    <div class="pl-expense-category"><span class="color-dot dot-distribution"></span> Marketing & Advertising</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Social Media Ads</span><span class="value text-danger">-$800.00</span></div>
+                        <div class="pl-row"><span class="label">Google Ads</span><span class="value text-danger">-$300.00</span></div>
+                        <div class="pl-row"><span class="label">Print Advertising</span><span class="value text-danger">-$150.00</span></div>
+                        <div class="pl-row"><span class="label">Website Expenses</span><span class="value text-danger">-$100.00</span></div>
+                        <div class="pl-row"><span class="label">SEO Services</span><span class="value text-danger">-$200.00</span></div>
+                        <div class="pl-row"><span class="label">Email Marketing</span><span class="value text-danger">-$40.00</span></div>
+                    </div>
+
+                    <div class="pl-expense-category" style="margin-top:6px;"><span class="color-dot dot-distribution"></span> Promotion & Branding</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Branding Materials</span><span class="value text-danger">-$60.00</span></div>
+                        <div class="pl-row"><span class="label">Promotional Items</span><span class="value text-danger">-$30.00</span></div>
+                        <div class="pl-row"><span class="label">Event Sponsorships</span><span class="value text-danger">-$100.00</span></div>
+                        <div class="pl-row"><span class="label">Client Gifts</span><span class="value text-danger">-$45.00</span></div>
+                    </div>
+
+                    <div class="pl-expense-category" style="margin-top:6px;"><span class="color-dot dot-distribution"></span> Distribution</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Gallery Hosting</span><span class="value text-danger">-$60.00</span></div>
+                        <div class="pl-row"><span class="label">File Delivery</span><span class="value text-danger">-$25.00</span></div>
+                        <div class="pl-row"><span class="label">Product Shipping</span><span class="value text-danger">-$35.00</span></div>
+                        <div class="pl-row"><span class="label">Packaging Materials</span><span class="value text-danger">-$20.00</span></div>
+                    </div>
+
+                    <div class="pl-expense-category" style="margin-top:6px;"><span class="color-dot dot-distribution"></span> Travel</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Local Travel (Mileage/Gas)</span><span class="value text-danger">-$55.00</span></div>
+                        <div class="pl-row"><span class="label">Destination Travel</span><span class="value text-danger">-$400.00</span></div>
+                        <div class="pl-row"><span class="label">Meals</span><span class="value text-danger">-$40.00</span></div>
+                    </div>
+
+                    <div class="pl-row" style="font-weight:700;border-top:2px solid var(--gray-200);padding-top:8px;margin-top:6px;">
+                        <span>TOTAL DISTRIBUTION & MARKETING</span>
+                        <span class="text-danger">-$2,460.00</span>
+                    </div>
+                </div>
+
+                <!-- FINANCE EXPENSES -->
+                <div class="pl-section">
+                    <div class="pl-group-header">💰 FINANCE EXPENSES</div>
+
+                    <div class="pl-expense-category"><span class="color-dot dot-finance"></span> Interest & Financing</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Interest on Loans</span><span class="value text-danger">-$120.00</span></div>
+                        <div class="pl-row"><span class="label">Credit Card Interest</span><span class="value text-danger">-$45.00</span></div>
+                        <div class="pl-row"><span class="label">Equipment Lease Interest</span><span class="value text-danger">-$60.00</span></div>
+                    </div>
+
+                    <div class="pl-expense-category" style="margin-top:6px;"><span class="color-dot dot-finance"></span> Payment Processing</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Credit Card Processing Fees</span><span class="value text-danger">-$80.00</span></div>
+                        <div class="pl-row"><span class="label">Bank Transfer Fees</span><span class="value text-danger">-$25.00</span></div>
+                        <div class="pl-row"><span class="label">Gateway Fees</span><span class="value text-danger">-$15.00</span></div>
+                    </div>
+
+                    <div class="pl-expense-category" style="margin-top:6px;"><span class="color-dot dot-finance"></span> Taxes (Non-Income)</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Sales Tax Payable</span><span class="value text-danger">-$260.00</span></div>
+                        <div class="pl-row"><span class="label">Property Tax</span><span class="value text-danger">-$50.00</span></div>
+                        <div class="pl-row"><span class="label">Business License Fees</span><span class="value text-danger">-$75.00</span></div>
+                    </div>
+
+                    <div class="pl-row" style="font-weight:700;border-top:2px solid var(--gray-200);padding-top:8px;margin-top:6px;">
+                        <span>TOTAL FINANCE EXPENSES</span>
+                        <span class="text-danger">-$730.00</span>
+                    </div>
+                </div>
+
+                <!-- OTHER EXPENSES -->
+                <div class="pl-section">
+                    <div class="pl-group-header">📊 OTHER EXPENSES</div>
+
+                    <div class="pl-expense-category"><span class="color-dot dot-other"></span> Depreciation & Amortization</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Equipment Depreciation</span><span class="value text-danger">-$180.00</span></div>
+                        <div class="pl-row"><span class="label">Vehicle Depreciation</span><span class="value text-danger">-$120.00</span></div>
+                        <div class="pl-row"><span class="label">Intangible Amortization</span><span class="value text-danger">-$45.00</span></div>
+                    </div>
+
+                    <div class="pl-expense-category" style="margin-top:6px;"><span class="color-dot dot-other"></span> Losses</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Bad Debt Expense</span><span class="value text-danger">-$75.00</span></div>
+                        <div class="pl-row"><span class="label">Loss on Asset Sale</span><span class="value text-danger">-$30.00</span></div>
+                    </div>
+
+                    <div class="pl-expense-category" style="margin-top:6px;"><span class="color-dot dot-other"></span> Extraordinary Items</div>
+                    <div class="pl-subsection">
+                        <div class="pl-row"><span class="label">Legal Settlements</span><span class="value text-danger">-$0.00</span></div>
+                        <div class="pl-row"><span class="label">Fines & Penalties</span><span class="value text-danger">-$0.00</span></div>
+                    </div>
+
+                    <div class="pl-row" style="font-weight:700;border-top:2px solid var(--gray-200);padding-top:8px;margin-top:6px;">
+                        <span>TOTAL OTHER EXPENSES</span>
+                        <span class="text-danger">-$450.00</span>
+                    </div>
+                </div>
+
+                <!-- NET PROFIT -->
+                <div class="pl-section" style="background:#D1FAE5;border-radius:var(--radius-sm);padding:12px 16px;margin-top:12px;">
+                    <div class="pl-row" style="font-size:1.2rem;">
+                        <span><strong>💰 NET PROFIT (Pre-Tax)</strong></span>
+                        <span class="text-success"><strong>$11,005.00</strong></span>
+                    </div>
+                    <div class="pl-row text-muted" style="font-size:0.8rem;">
+                        <span>Net Margin</span>
+                        <span>64.0%</span>
+                    </div>
+                    <div class="pl-row text-muted" style="font-size:0.75rem;border-top:1px solid var(--gray-200);padding-top:4px;margin-top:4px;">
+                        <span>Total Expenses: $6,415.00</span>
+                        <span>|</span>
+                        <span>Operating: $2,775.00</span>
+                        <span>|</span>
+                        <span>Distribution: $2,460.00</span>
+                        <span>|</span>
+                        <span>Finance: $730.00</span>
+                        <span>|</span>
+                        <span>Other: $450.00</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CASH vs ACCRUAL COMPARISON ===== -->
+    <div class="card" style="background:var(--gray-50);border:1px solid var(--gray-200);">
+        <div class="card-body" style="padding:16px 24px;">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+                <div>
+                    <span style="font-weight:600;font-size:0.9rem;">📊 Cash vs Accrual Comparison</span>
+                    <span class="text-muted" style="font-size:0.8rem;margin-left:12px;">Month to Date</span>
+                </div>
+                <div style="display:flex;gap:24px;flex-wrap:wrap;">
+                    <div><span class="text-muted">Cash Revenue:</span> <strong>$8,450.00</strong></div>
+                    <div><span class="text-muted">Accrual Revenue:</span> <strong>$12,200.00</strong></div>
+                    <div><span class="text-muted">Difference:</span> <strong class="text-primary">$3,750.00</strong></div>
+                    <div style="font-size:0.8rem;color:var(--gray-500);">Work done, not yet paid</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- ===== MODAL: New Transaction ===== -->
+<div class="modal-overlay" id="transactionModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2><i class="fas fa-plus-circle" style="color:var(--primary);margin-right:8px;"></i> New Transaction</h2>
+            <button class="modal-close" onclick="closeModal('transactionModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+
+            <!-- Transaction Type -->
+            <div class="form-group">
+                <label>Transaction Type</label>
+                <div class="transaction-type-group">
+                    <span class="type-chip active" onclick="selectType(this)">💰 Income</span>
+                    <span class="type-chip" onclick="selectType(this)">💳 Expense</span>
+                    <span class="type-chip" onclick="selectType(this)">📦 COGS</span>
+                    <span class="type-chip" onclick="selectType(this)">🔄 Transfer</span>
+                    <span class="type-chip" onclick="selectType(this)">📋 Refund</span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Client / Vendor <span class="helper">(search)</span></label>
+                    <select class="form-control">
+                        <option value="">— Select —</option>
+                        <option>Sarah Johnson - Wedding</option>
+                        <option>Thompson Family - Portrait</option>
+                        <option>Emily Davis - Senior</option>
+                        <option>B&H Photo - Vendor</option>
+                        <option>WHCC Lab - Vendor</option>
+                        <option>Meta/Facebook - Vendor</option>
+                        <option>Google Ads - Vendor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="text" class="form-control" placeholder="0.00" value="800.00">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Payment Date <span class="helper">(Cash basis)</span></label>
+                    <input type="date" class="form-control" value="2026-08-15">
+                </div>
+                <div class="form-group">
+                    <label>Service / Shoot Date <span class="helper">(Accrual basis)</span></label>
+                    <input type="date" class="form-control" value="2026-08-03">
+                </div>
+            </div>
+
+            <!-- HIERARCHICAL EXPENSE CATEGORY DROPDOWN -->
+            <div class="form-group">
+                <label>Category <span class="helper">(what is this for?)</span></label>
+                <div class="hierarchical-select">
+                    <select class="form-control" id="categorySelect" onchange="updateDoubleEntry()">
+                        <!-- INCOME -->
+                        <optgroup label="💰 INCOME">
+                            <option value="wedding">Wedding Photography - Final Payment</option>
+                            <option value="wedding-deposit">Wedding Photography - Deposit</option>
+                            <option value="wedding-retainer">Wedding Photography - Retainer</option>
+                            <option value="portrait">Portrait Session</option>
+                            <option value="commercial">Commercial Work</option>
+                            <option value="product-sale">Product Sale (Prints/Albums)</option>
+                            <option value="other-income">Other Income</option>
+                        </optgroup>
+
+                        <!-- COGS -->
+                        <optgroup label="📦 COST OF GOODS SOLD">
+                            <option value="cogs-lab">Lab/Printing Costs</option>
+                            <option value="cogs-shooter">Second Shooter</option>
+                            <option value="cogs-materials">Direct Materials</option>
+                            <option value="cogs-equipment-rental">Equipment Rental</option>
+                        </optgroup>
+
+                        <!-- OPERATING EXPENSES -->
+                        <optgroup label="🏢 OPERATING EXPENSES (SG&A)">
+                            <option value="expense-rent" style="font-weight:600;color:var(--gray-700);">── Studio & Facilities</option>
+                            <option value="expense-rent" style="padding-left:16px;">Studio Rent</option>
+                            <option value="expense-utilities" style="padding-left:16px;">Utilities</option>
+                            <option value="expense-maintenance" style="padding-left:16px;">Studio Maintenance</option>
+                            <option value="expense-property-insurance" style="padding-left:16px;">Property Insurance</option>
+                            
+                            <option value="expense-software" style="font-weight:600;color:var(--gray-700);padding-top:4px;">── Office & Administration</option>
+                            <option value="expense-software" style="padding-left:16px;">Software Subscriptions</option>
+                            <option value="expense-professional" style="padding-left:16px;">Professional Services</option>
+                            <option value="expense-supplies" style="padding-left:16px;">Office Supplies</option>
+                            <option value="expense-bank-fees" style="padding-left:16px;">Bank Fees</option>
+                            <option value="expense-insurance" style="padding-left:16px;">Insurance</option>
+                            <option value="expense-postage" style="padding-left:16px;">Postage & Shipping</option>
+                            
+                            <option value="expense-salaries" style="font-weight:600;color:var(--gray-700);padding-top:4px;">── Staff & HR</option>
+                            <option value="expense-salaries" style="padding-left:16px;">Salaries & Wages</option>
+                            <option value="expense-payroll-tax" style="padding-left:16px;">Payroll Taxes</option>
+                            <option value="expense-benefits" style="padding-left:16px;">Health Benefits</option>
+                            <option value="expense-training" style="padding-left:16px;">Training & Development</option>
+                            
+                            <option value="expense-membership" style="font-weight:600;color:var(--gray-700);padding-top:4px;">── General</option>
+                            <option value="expense-membership" style="padding-left:16px;">Membership Dues</option>
+                            <option value="expense-subscriptions" style="padding-left:16px;">Subscriptions</option>
+                            <option value="expense-misc" style="padding-left:16px;">Miscellaneous</option>
+                        </optgroup>
+
+                        <!-- DISTRIBUTION & MARKETING -->
+                        <optgroup label="📦 DISTRIBUTION & MARKETING">
+                            <option value="expense-social-ads" style="font-weight:600;color:var(--gray-700);">── Marketing & Advertising</option>
+                            <option value="expense-social-ads" style="padding-left:16px;">Social Media Ads</option>
+                            <option value="expense-google-ads" style="padding-left:16px;">Google Ads</option>
+                            <option value="expense-print-ads" style="padding-left:16px;">Print Advertising</option>
+                            <option value="expense-website" style="padding-left:16px;">Website Expenses</option>
+                            <option value="expense-seo" style="padding-left:16px;">SEO Services</option>
+                            <option value="expense-content" style="padding-left:16px;">Content Creation</option>
+                            <option value="expense-email" style="padding-left:16px;">Email Marketing</option>
+                            
+                            <option value="expense-branding" style="font-weight:600;color:var(--gray-700);padding-top:4px;">── Promotion & Branding</option>
+                            <option value="expense-branding" style="padding-left:16px;">Branding Materials</option>
+                            <option value="expense-promo" style="padding-left:16px;">Promotional Items</option>
+                            <option value="expense-sponsorship" style="padding-left:16px;">Event Sponsorships</option>
+                            <option value="expense-client-gifts" style="padding-left:16px;">Client Gifts</option>
+                            
+                            <option value="expense-gallery" style="font-weight:600;color:var(--gray-700);padding-top:4px;">── Distribution</option>
+                            <option value="expense-gallery" style="padding-left:16px;">Gallery Hosting</option>
+                            <option value="expense-file-delivery" style="padding-left:16px;">File Delivery</option>
+                            <option value="expense-product-shipping" style="padding-left:16px;">Product Shipping</option>
+                            <option value="expense-packaging" style="padding-left:16px;">Packaging Materials</option>
+                            <option value="expense-fulfillment" style="padding-left:16px;">Fulfillment Services</option>
+                            
+                            <option value="expense-local-travel" style="font-weight:600;color:var(--gray-700);padding-top:4px;">── Travel</option>
+                            <option value="expense-local-travel" style="padding-left:16px;">Local Travel</option>
+                            <option value="expense-destination-travel" style="padding-left:16px;">Destination Travel</option>
+                            <option value="expense-meals" style="padding-left:16px;">Meals</option>
+                        </optgroup>
+
+                        <!-- FINANCE EXPENSES -->
+                        <optgroup label="💰 FINANCE EXPENSES">
+                            <option value="expense-interest-loans" style="font-weight:600;color:var(--gray-700);">── Interest & Financing</option>
+                            <option value="expense-interest-loans" style="padding-left:16px;">Interest on Loans</option>
+                            <option value="expense-credit-card-interest" style="padding-left:16px;">Credit Card Interest</option>
+                            <option value="expense-lease-interest" style="padding-left:16px;">Equipment Lease Interest</option>
+                            <option value="expense-loc-interest" style="padding-left:16px;">Line of Credit Interest</option>
+                            
+                            <option value="expense-processing" style="font-weight:600;color:var(--gray-700);padding-top:4px;">── Payment Processing</option>
+                            <option value="expense-processing" style="padding-left:16px;">Credit Card Processing Fees</option>
+                            <option value="expense-bank-transfer" style="padding-left:16px;">Bank Transfer Fees</option>
+                            <option value="expense-gateway" style="padding-left:16px;">Gateway Fees</option>
+                            
+                            <option value="expense-forex" style="font-weight:600;color:var(--gray-700);padding-top:4px;">── Currency & Foreign</option>
+                            <option value="expense-forex" style="padding-left:16px;">Foreign Exchange Fees</option>
+                            <option value="expense-international" style="padding-left:16px;">International Bank Fees</option>
+                            
+                            <option value="expense-sales-tax" style="font-weight:600;color:var(--gray-700);padding-top:4px;">── Taxes (Non-Income)</option>
+                            <option value="expense-sales-tax" style="padding-left:16px;">Sales Tax Payable</option>
+                            <option value="expense-property-tax" style="padding-left:16px;">Property Tax</option>
+                            <option value="expense-license" style="padding-left:16px;">Business License Fees</option>
+                        </optgroup>
+
+                        <!-- OTHER EXPENSES -->
+                        <optgroup label="📊 OTHER EXPENSES">
+                            <option value="expense-depreciation" style="font-weight:600;color:var(--gray-700);">── Depreciation & Amortization</option>
+                            <option value="expense-depreciation" style="padding-left:16px;">Equipment Depreciation</option>
+                            <option value="expense-vehicle-depreciation" style="padding-left:16px;">Vehicle Depreciation</option>
+                            <option value="expense-amortization" style="padding-left:16px;">Intangible Amortization</option>
+                            
+                            <option value="expense-bad-debt" style="font-weight:600;color:var(--gray-700);padding-top:4px;">── Losses</option>
+                            <option value="expense-bad-debt" style="padding-left:16px;">Bad Debt Expense</option>
+                            <option value="expense-asset-sale" style="padding-left:16px;">Loss on Asset Sale</option>
+                            <option value="expense-theft" style="padding-left:16px;">Theft/Loss</option>
+                            
+                            <option value="expense-settlements" style="font-weight:600;color:var(--gray-700);padding-top:4px;">── Extraordinary Items</option>
+                            <option value="expense-settlements" style="padding-left:16px;">Legal Settlements</option>
+                            <option value="expense-fines" style="padding-left:16px;">Fines & Penalties</option>
+                            <option value="expense-disaster" style="padding-left:16px;">Natural Disasters</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" class="form-control" placeholder="Brief description..." value="Facebook Ads - Wedding Campaign">
+            </div>
+
+            <div class="form-group">
+                <label>Attachments</label>
+                <div style="border:2px dashed var(--gray-200);border-radius:var(--radius-sm);padding:16px;text-align:center;cursor:pointer;transition:border 0.2s;" 
+                     onmouseover="this.style.borderColor='var(--primary)'" 
+                     onmouseout="this.style.borderColor='var(--gray-200)'">
+                    <i class="fas fa-cloud-upload-alt" style="font-size:1.5rem;color:var(--gray-400);"></i>
+                    <p style="font-size:0.8rem;color:var(--gray-500);margin-top:4px;">Click to upload receipt or drag & drop</p>
+                </div>
+            </div>
+
+            <!-- Double Entry Preview -->
+            <div class="form-group">
+                <label style="display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-balance-scale" style="color:var(--primary);"></i> 
+                    Double-Entry Preview <span class="helper">(auto-generated)</span>
+                </label>
+                <div class="entry-preview" id="doubleEntryPreview">
+                    <table>
+                        <thead>
+                            <tr><th>Account</th><th>Description</th><th>Debit</th><th>Credit</th></tr>
+                        </thead>
+                        <tbody id="entryRows">
+                            <tr>
+                                <td><strong>6010 - Marketing Expense</strong></td>
+                                <td>Social Media Ads</td>
+                                <td class="text-success">$800.00</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td><strong>1010 - Checking</strong></td>
+                                <td>Facebook Ad Payment</td>
+                                <td>—</td>
+                                <td class="text-danger">$800.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="balance-row">
+                                <td colspan="2"><strong>Total</strong></td>
+                                <td class="text-success"><strong>$800.00</strong></td>
+                                <td class="text-danger"><strong>$800.00</strong></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="border:none;padding-top:4px;">
+                                    <span class="balanced">✅ Balanced — Debits = Credits</span>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('transactionModal')">Cancel</button>
+            <button class="btn btn-primary" onclick="closeModal('transactionModal')"><i class="fas fa-save"></i> Save Transaction</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ===== MODAL: New Invoice ===== -->
+<div class="modal-overlay" id="invoiceModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2><i class="fas fa-file-invoice" style="color:var(--primary);margin-right:8px;"></i> New Invoice</h2>
+            <button class="modal-close" onclick="closeModal('invoiceModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Client</label>
+                    <select class="form-control">
+                        <option>Sarah Johnson</option>
+                        <option>Thompson Family</option>
+                        <option>Emily Davis</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Invoice Date</label>
+                    <input type="date" class="form-control" value="2026-08-15">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Due Date</label>
+                    <input type="date" class="form-control" value="2026-09-14">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select class="form-control">
+                        <option>Draft</option>
+                        <option selected>Sent</option>
+                        <option>Paid</option>
+                        <option>Overdue</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Line Items</label>
+                <div style="background:var(--gray-50);border-radius:var(--radius-sm);padding:12px;border:1px solid var(--gray-200);">
+                    <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:8px;font-weight:600;font-size:0.8rem;color:var(--gray-500);padding-bottom:8px;border-bottom:1px solid var(--gray-200);">
+                        <span>Item</span>
+                        <span>Qty</span>
+                        <span>Unit Price</span>
+                        <span>Total</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:8px;padding:8px 0;border-bottom:1px solid var(--gray-100);">
+                        <input class="form-control" style="padding:6px 10px;" value="Wedding Photography - Premium">
+                        <input class="form-control" style="padding:6px 10px;width:60px;" value="1">
+                        <input class="form-control" style="padding:6px 10px;width:80px;" value="$2,500.00">
+                        <span style="font-weight:600;padding:6px 0;">$2,500.00</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:8px;padding:8px 0;border-bottom:1px solid var(--gray-100);">
+                        <input class="form-control" style="padding:6px 10px;" value="12x16 Canvas Print">
+                        <input class="form-control" style="padding:6px 10px;width:60px;" value="2">
+                        <input class="form-control" style="padding:6px 10px;width:80px;" value="$150.00">
+                        <span style="font-weight:600;padding:6px 0;">$300.00</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:8px;padding:8px 0;">
+                        <input class="form-control" style="padding:6px 10px;" value="10x10 Flush Album">
+                        <input class="form-control" style="padding:6px 10px;width:60px;" value="1">
+                        <input class="form-control" style="padding:6px 10px;width:80px;" value="$450.00">
+                        <span style="font-weight:600;padding:6px 0;">$450.00</span>
+                    </div>
+                    <button class="btn btn-sm btn-outline" style="margin-top:8px;"><i class="fas fa-plus"></i> Add Item</button>
+                </div>
+            </div>
+
+            <div style="background:var(--gray-50);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--gray-200);">
+                <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Subtotal</span><strong>$3,250.00</strong></div>
+                <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Sales Tax (8%)</span><strong>$260.00</strong></div>
+                <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:2px solid var(--gray-200);font-size:1.1rem;">
+                    <span><strong>Total</strong></span>
+                    <span><strong>$3,510.00</strong></span>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('invoiceModal')">Cancel</button>
+            <button class="btn btn-primary" onclick="closeModal('invoiceModal')"><i class="fas fa-paper-plane"></i> Send Invoice</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ===== MODAL: Reconcile ===== -->
+<div class="modal-overlay" id="reconcileModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2><i class="fas fa-check-double" style="color:var(--primary);margin-right:8px;"></i> Bank Reconciliation</h2>
+            <button class="modal-close" onclick="closeModal('reconcileModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Bank Account</label>
+                    <select class="form-control">
+                        <option>Business Checking - Chase</option>
+                        <option>Business Savings</option>
+                        <option>PayPal</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Statement Period</label>
+                    <select class="form-control">
+                        <option selected>August 2026</option>
+                        <option>July 2026</option>
+                        <option>June 2026</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="reconcile-diff">
+                <span>
+                    <strong>Bank Statement Balance:</strong> $12,845.00 &nbsp;|&nbsp;
+                    <strong>System Balance:</strong> $12,450.00
+                </span>
+                <span class="amount">Difference: $395.00 ⚠️</span>
+            </div>
+
+            <div class="reconcile-match">
+                <div class="reconcile-column">
+                    <h4>🏦 Bank Transactions</h4>
+                    <div class="reconcile-item">
+                        <input type="checkbox" checked>
+                        <span>08/01 <strong>$1,500.00</strong> Sarah Johnson</span>
+                    </div>
+                    <div class="reconcile-item">
+                        <input type="checkbox" checked>
+                        <span>08/03 <strong>$800.00</strong> Meta/Facebook</span>
+                    </div>
+                    <div class="reconcile-item">
+                        <input type="checkbox" checked>
+                        <span>08/05 <strong>$245.50</strong> B&H Photo</span>
+                    </div>
+                    <div class="reconcile-item" style="background:#FEF3C7;border-radius:4px;">
+                        <input type="checkbox">
+                        <span>08/07 <strong>$395.00</strong> Unknown Charge</span>
+                        <span style="font-size:0.7rem;color:#92400E;margin-left:auto;">⚠️ Not found</span>
+                    </div>
+                </div>
+                <div class="reconcile-column">
+                    <h4>📚 System Transactions</h4>
+                    <div class="reconcile-item">
+                        <input type="checkbox" checked>
+                        <span>08/01 <strong>$1,500.00</strong> Client Payment</span>
+                    </div>
+                    <div class="reconcile-item">
+                        <input type="checkbox" checked>
+                        <span>08/03 <strong>$800.00</strong> Marketing Expense</span>
+                    </div>
+                    <div class="reconcile-item">
+                        <input type="checkbox" checked>
+                        <span>08/05 <strong>$245.50</strong> Equipment Purchase</span>
+                    </div>
+                    <div class="reconcile-item" style="color:var(--gray-400);">
+                        <span style="margin-left:24px;">No matching transaction found</span>
+                        <button class="btn btn-sm btn-primary" style="margin-left:auto;">+ Create</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                <span class="text-muted" style="font-size:0.8rem;">Matched: 3 of 4 transactions</span>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn btn-sm btn-outline">Mark as Adjustment</button>
+                    <button class="btn btn-sm btn-success" onclick="closeModal('reconcileModal')"><i class="fas fa-check"></i> Reconcile Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+    // ---- Modal Controls ----
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+        el.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    });
+
+    // ---- Transaction Type Chips ----
+    function selectType(el) {
+        const parent = el.closest('.transaction-type-group');
+        parent.querySelectorAll('.type-chip').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        updateDoubleEntry();
+    }
+
+    // ---- Basis Toggle ----
+    let basis = 'accrual';
+
+    function toggleBasis() {
+        const toggle = document.getElementById('basisToggle');
+        toggle.classList.toggle('active');
+        basis = toggle.classList.contains('active') ? 'accrual' : 'cash';
+        console.log('Switched to:', basis);
+    }
+
+    // ---- Double Entry Auto-Update ----
+    function updateDoubleEntry() {
+        const category = document.getElementById('categorySelect').value;
+        const tbody = document.getElementById('entryRows');
+
+        const entries = {
+            // INCOME
+            'wedding': {
+                rows: [
+                    { account: '1010 - Checking', desc: 'Client Payment', debit: '$1,500.00', credit: '—' },
+                    { account: '4000 - Wedding Revenue', desc: 'Wedding Photography', debit: '—', credit: '$1,500.00' }
+                ]
+            },
+            'wedding-deposit': {
+                rows: [
+                    { account: '1010 - Checking', desc: 'Deposit Received', debit: '$500.00', credit: '—' },
+                    { account: '2000 - Unearned Revenue', desc: 'Deferred Income', debit: '—', credit: '$500.00' }
+                ]
+            },
+            'wedding-retainer': {
+                rows: [
+                    { account: '1010 - Checking', desc: 'Retainer Received', debit: '$750.00', credit: '—' },
+                    { account: '2000 - Unearned Revenue', desc: 'Deferred Income', debit: '—', credit: '$750.00' }
+                ]
+            },
+            'portrait': {
+                rows: [
+                    { account: '1010 - Checking', desc: 'Client Payment', debit: '$850.00', credit: '—' },
+                    { account: '4010 - Portrait Revenue', desc: 'Portrait Session', debit: '—', credit: '$850.00' }
+                ]
+            },
+            'commercial': {
+                rows: [
+                    { account: '1010 - Checking', desc: 'Client Payment', debit: '$1,200.00', credit: '—' },
+                    { account: '4020 - Commercial Revenue', desc: 'Commercial Work', debit: '—', credit: '$1,200.00' }
+                ]
+            },
+            'product-sale': {
+                rows: [
+                    { account: '1010 - Checking', desc: 'Product Sale', debit: '$180.00', credit: '—' },
+                    { account: '4030 - Product Revenue', desc: 'Print/Album Sale', debit: '—', credit: '$180.00' }
+                ]
+            },
+            'other-income': {
+                rows: [
+                    { account: '1010 - Checking', desc: 'Other Income', debit: '$100.00', credit: '—' },
+                    { account: '4090 - Other Income', desc: 'Miscellaneous Income', debit: '—', credit: '$100.00' }
+                ]
+            },
+
+            // COGS
+            'cogs-lab': {
+                rows: [
+                    { account: '5000 - COGS Lab', desc: 'Lab/Printing Costs', debit: '$120.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Lab Payment', debit: '—', credit: '$120.00' }
+                ]
+            },
+            'cogs-shooter': {
+                rows: [
+                    { account: '5100 - COGS Subcontractors', desc: 'Second Shooter', debit: '$250.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Shooter Payment', debit: '—', credit: '$250.00' }
+                ]
+            },
+            'cogs-materials': {
+                rows: [
+                    { account: '5200 - COGS Materials', desc: 'Direct Materials', debit: '$75.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Materials Payment', debit: '—', credit: '$75.00' }
+                ]
+            },
+            'cogs-equipment-rental': {
+                rows: [
+                    { account: '5300 - COGS Equipment Rental', desc: 'Equipment Rental', debit: '$120.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Rental Payment', debit: '—', credit: '$120.00' }
+                ]
+            },
+
+            // OPERATING EXPENSES
+            'expense-rent': {
+                rows: [
+                    { account: '6000 - Rent Expense', desc: 'Studio Rent', debit: '$900.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Rent Payment', debit: '—', credit: '$900.00' }
+                ]
+            },
+            'expense-utilities': {
+                rows: [
+                    { account: '6010 - Utilities Expense', desc: 'Utilities', debit: '$210.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Utilities Payment', debit: '—', credit: '$210.00' }
+                ]
+            },
+            'expense-maintenance': {
+                rows: [
+                    { account: '6020 - Maintenance Expense', desc: 'Studio Maintenance', debit: '$65.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Maintenance Payment', debit: '—', credit: '$65.00' }
+                ]
+            },
+            'expense-property-insurance': {
+                rows: [
+                    { account: '6030 - Insurance Expense', desc: 'Property Insurance', debit: '$120.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Insurance Payment', debit: '—', credit: '$120.00' }
+                ]
+            },
+            'expense-software': {
+                rows: [
+                    { account: '6040 - Software Expense', desc: 'Software Subscriptions', debit: '$150.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Software Payment', debit: '—', credit: '$150.00' }
+                ]
+            },
+            'expense-professional': {
+                rows: [
+                    { account: '6050 - Professional Services', desc: 'Professional Services', debit: '$350.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Professional Payment', debit: '—', credit: '$350.00' }
+                ]
+            },
+            'expense-supplies': {
+                rows: [
+                    { account: '6060 - Office Supplies', desc: 'Office Supplies', debit: '$75.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Supplies Payment', debit: '—', credit: '$75.00' }
+                ]
+            },
+            'expense-bank-fees': {
+                rows: [
+                    { account: '6070 - Bank Fees', desc: 'Bank Fees', debit: '$85.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Bank Fee Payment', debit: '—', credit: '$85.00' }
+                ]
+            },
+            'expense-insurance': {
+                rows: [
+                    { account: '6030 - Insurance Expense', desc: 'Business Insurance', debit: '$200.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Insurance Payment', debit: '—', credit: '$200.00' }
+                ]
+            },
+            'expense-postage': {
+                rows: [
+                    { account: '6080 - Postage Expense', desc: 'Postage & Shipping', debit: '$45.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Postage Payment', debit: '—', credit: '$45.00' }
+                ]
+            },
+            'expense-salaries': {
+                rows: [
+                    { account: '6090 - Salaries Expense', desc: 'Salaries & Wages', debit: '$450.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Salary Payment', debit: '—', credit: '$450.00' }
+                ]
+            },
+            'expense-payroll-tax': {
+                rows: [
+                    { account: '6100 - Payroll Tax Expense', desc: 'Payroll Taxes', debit: '$60.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Payroll Tax Payment', debit: '—', credit: '$60.00' }
+                ]
+            },
+            'expense-benefits': {
+                rows: [
+                    { account: '6110 - Benefits Expense', desc: 'Health Benefits', debit: '$200.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Benefits Payment', debit: '—', credit: '$200.00' }
+                ]
+            },
+            'expense-training': {
+                rows: [
+                    { account: '6120 - Training Expense', desc: 'Training & Development', debit: '$50.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Training Payment', debit: '—', credit: '$50.00' }
+                ]
+            },
+            'expense-membership': {
+                rows: [
+                    { account: '6130 - Dues & Subscriptions', desc: 'Membership Dues', debit: '$40.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Dues Payment', debit: '—', credit: '$40.00' }
+                ]
+            },
+            'expense-subscriptions': {
+                rows: [
+                    { account: '6130 - Dues & Subscriptions', desc: 'Subscriptions', debit: '$25.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Subscription Payment', debit: '—', credit: '$25.00' }
+                ]
+            },
+            'expense-misc': {
+                rows: [
+                    { account: '6140 - Miscellaneous Expense', desc: 'Miscellaneous', debit: '$50.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Misc Payment', debit: '—', credit: '$50.00' }
+                ]
+            },
+
+            // DISTRIBUTION & MARKETING
+            'expense-social-ads': {
+                rows: [
+                    { account: '7000 - Marketing Expense', desc: 'Social Media Ads', debit: '$800.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Ad Payment', debit: '—', credit: '$800.00' }
+                ]
+            },
+            'expense-google-ads': {
+                rows: [
+                    { account: '7000 - Marketing Expense', desc: 'Google Ads', debit: '$300.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Ad Payment', debit: '—', credit: '$300.00' }
+                ]
+            },
+            'expense-print-ads': {
+                rows: [
+                    { account: '7000 - Marketing Expense', desc: 'Print Advertising', debit: '$150.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Ad Payment', debit: '—', credit: '$150.00' }
+                ]
+            },
+            'expense-website': {
+                rows: [
+                    { account: '7000 - Marketing Expense', desc: 'Website Expenses', debit: '$100.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Website Payment', debit: '—', credit: '$100.00' }
+                ]
+            },
+            'expense-seo': {
+                rows: [
+                    { account: '7000 - Marketing Expense', desc: 'SEO Services', debit: '$200.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'SEO Payment', debit: '—', credit: '$200.00' }
+                ]
+            },
+            'expense-content': {
+                rows: [
+                    { account: '7000 - Marketing Expense', desc: 'Content Creation', debit: '$150.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Content Payment', debit: '—', credit: '$150.00' }
+                ]
+            },
+            'expense-email': {
+                rows: [
+                    { account: '7000 - Marketing Expense', desc: 'Email Marketing', debit: '$40.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Email Payment', debit: '—', credit: '$40.00' }
+                ]
+            },
+            'expense-branding': {
+                rows: [
+                    { account: '7010 - Branding Expense', desc: 'Branding Materials', debit: '$60.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Branding Payment', debit: '—', credit: '$60.00' }
+                ]
+            },
+            'expense-promo': {
+                rows: [
+                    { account: '7010 - Branding Expense', desc: 'Promotional Items', debit: '$30.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Promo Payment', debit: '—', credit: '$30.00' }
+                ]
+            },
+            'expense-sponsorship': {
+                rows: [
+                    { account: '7010 - Branding Expense', desc: 'Event Sponsorships', debit: '$100.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Sponsorship Payment', debit: '—', credit: '$100.00' }
+                ]
+            },
+            'expense-client-gifts': {
+                rows: [
+                    { account: '7010 - Branding Expense', desc: 'Client Gifts', debit: '$45.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Gift Payment', debit: '—', credit: '$45.00' }
+                ]
+            },
+            'expense-gallery': {
+                rows: [
+                    { account: '7020 - Distribution Expense', desc: 'Gallery Hosting', debit: '$60.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Gallery Payment', debit: '—', credit: '$60.00' }
+                ]
+            },
+            'expense-file-delivery': {
+                rows: [
+                    { account: '7020 - Distribution Expense', desc: 'File Delivery', debit: '$25.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Delivery Payment', debit: '—', credit: '$25.00' }
+                ]
+            },
+            'expense-product-shipping': {
+                rows: [
+                    { account: '7020 - Distribution Expense', desc: 'Product Shipping', debit: '$35.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Shipping Payment', debit: '—', credit: '$35.00' }
+                ]
+            },
+            'expense-packaging': {
+                rows: [
+                    { account: '7020 - Distribution Expense', desc: 'Packaging Materials', debit: '$20.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Packaging Payment', debit: '—', credit: '$20.00' }
+                ]
+            },
+            'expense-fulfillment': {
+                rows: [
+                    { account: '7020 - Distribution Expense', desc: 'Fulfillment Services', debit: '$50.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Fulfillment Payment', debit: '—', credit: '$50.00' }
+                ]
+            },
+            'expense-local-travel': {
+                rows: [
+                    { account: '7030 - Travel Expense', desc: 'Local Travel', debit: '$55.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Travel Payment', debit: '—', credit: '$55.00' }
+                ]
+            },
+            'expense-destination-travel': {
+                rows: [
+                    { account: '7030 - Travel Expense', desc: 'Destination Travel', debit: '$400.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Travel Payment', debit: '—', credit: '$400.00' }
+                ]
+            },
+            'expense-meals': {
+                rows: [
+                    { account: '7030 - Travel Expense', desc: 'Meals', debit: '$40.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Meal Payment', debit: '—', credit: '$40.00' }
+                ]
+            },
+
+            // FINANCE EXPENSES
+            'expense-interest-loans': {
+                rows: [
+                    { account: '8000 - Interest Expense', desc: 'Interest on Loans', debit: '$120.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Interest Payment', debit: '—', credit: '$120.00' }
+                ]
+            },
+            'expense-credit-card-interest': {
+                rows: [
+                    { account: '8000 - Interest Expense', desc: 'Credit Card Interest', debit: '$45.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Interest Payment', debit: '—', credit: '$45.00' }
+                ]
+            },
+            'expense-lease-interest': {
+                rows: [
+                    { account: '8000 - Interest Expense', desc: 'Equipment Lease Interest', debit: '$60.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Interest Payment', debit: '—', credit: '$60.00' }
+                ]
+            },
+            'expense-loc-interest': {
+                rows: [
+                    { account: '8000 - Interest Expense', desc: 'Line of Credit Interest', debit: '$35.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Interest Payment', debit: '—', credit: '$35.00' }
+                ]
+            },
+            'expense-processing': {
+                rows: [
+                    { account: '8010 - Processing Fees', desc: 'Credit Card Processing', debit: '$80.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Processing Payment', debit: '—', credit: '$80.00' }
+                ]
+            },
+            'expense-bank-transfer': {
+                rows: [
+                    { account: '8010 - Processing Fees', desc: 'Bank Transfer Fees', debit: '$25.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Transfer Fee Payment', debit: '—', credit: '$25.00' }
+                ]
+            },
+            'expense-gateway': {
+                rows: [
+                    { account: '8010 - Processing Fees', desc: 'Gateway Fees', debit: '$15.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Gateway Payment', debit: '—', credit: '$15.00' }
+                ]
+            },
+            'expense-forex': {
+                rows: [
+                    { account: '8020 - Currency Expense', desc: 'Foreign Exchange Fees', debit: '$20.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Forex Payment', debit: '—', credit: '$20.00' }
+                ]
+            },
+            'expense-international': {
+                rows: [
+                    { account: '8020 - Currency Expense', desc: 'International Bank Fees', debit: '$15.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'International Payment', debit: '—', credit: '$15.00' }
+                ]
+            },
+            'expense-sales-tax': {
+                rows: [
+                    { account: '8030 - Tax Expense', desc: 'Sales Tax Payable', debit: '$260.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Tax Payment', debit: '—', credit: '$260.00' }
+                ]
+            },
+            'expense-property-tax': {
+                rows: [
+                    { account: '8030 - Tax Expense', desc: 'Property Tax', debit: '$50.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Tax Payment', debit: '—', credit: '$50.00' }
+                ]
+            },
+            'expense-license': {
+                rows: [
+                    { account: '8030 - Tax Expense', desc: 'Business License Fees', debit: '$75.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'License Payment', debit: '—', credit: '$75.00' }
+                ]
+            },
+
+            // OTHER EXPENSES
+            'expense-depreciation': {
+                rows: [
+                    { account: '9000 - Depreciation Expense', desc: 'Equipment Depreciation', debit: '$180.00', credit: '—' },
+                    { account: '1200 - Accumulated Depreciation', desc: 'Accumulated Depreciation', debit: '—', credit: '$180.00' }
+                ]
+            },
+            'expense-vehicle-depreciation': {
+                rows: [
+                    { account: '9000 - Depreciation Expense', desc: 'Vehicle Depreciation', debit: '$120.00', credit: '—' },
+                    { account: '1200 - Accumulated Depreciation', desc: 'Accumulated Depreciation', debit: '—', credit: '$120.00' }
+                ]
+            },
+            'expense-amortization': {
+                rows: [
+                    { account: '9010 - Amortization Expense', desc: 'Intangible Amortization', debit: '$45.00', credit: '—' },
+                    { account: '1210 - Accumulated Amortization', desc: 'Accumulated Amortization', debit: '—', credit: '$45.00' }
+                ]
+            },
+            'expense-bad-debt': {
+                rows: [
+                    { account: '9020 - Bad Debt Expense', desc: 'Bad Debt Write-Off', debit: '$75.00', credit: '—' },
+                    { account: '1100 - Accounts Receivable', desc: 'Write-Off', debit: '—', credit: '$75.00' }
+                ]
+            },
+            'expense-asset-sale': {
+                rows: [
+                    { account: '9030 - Loss on Asset Sale', desc: 'Loss on Asset Sale', debit: '$30.00', credit: '—' },
+                    { account: '1200 - Equipment Asset', desc: 'Asset Disposal', debit: '—', credit: '$30.00' }
+                ]
+            },
+            'expense-theft': {
+                rows: [
+                    { account: '9040 - Theft/Loss Expense', desc: 'Theft/Loss', debit: '$200.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Loss Payment', debit: '—', credit: '$200.00' }
+                ]
+            },
+            'expense-settlements': {
+                rows: [
+                    { account: '9050 - Legal Expense', desc: 'Legal Settlements', debit: '$500.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Settlement Payment', debit: '—', credit: '$500.00' }
+                ]
+            },
+            'expense-fines': {
+                rows: [
+                    { account: '9060 - Fines & Penalties', desc: 'Fines & Penalties', debit: '$100.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Fine Payment', debit: '—', credit: '$100.00' }
+                ]
+            },
+            'expense-disaster': {
+                rows: [
+                    { account: '9070 - Extraordinary Loss', desc: 'Natural Disaster Loss', debit: '$1,000.00', credit: '—' },
+                    { account: '1010 - Checking', desc: 'Disaster Payment', debit: '—', credit: '$1,000.00' }
+                ]
+            }
+        };
+
+        const data = entries[category] || entries['wedding'];
+        let html = '';
+        let totalDebit = 0;
+        let totalCredit = 0;
+
+        data.rows.forEach(row => {
+            const d = parseFloat(row.debit.replace(/[$,]/g, '')) || 0;
+            const c = parseFloat(row.credit.replace(/[$,]/g, '')) || 0;
+            totalDebit += d;
+            totalCredit += c;
+            html += `
+                <tr>
+                    <td><strong>${row.account}</strong></td>
+                    <td>${row.desc}</td>
+                    <td class="${d > 0 ? 'text-success' : ''}">${row.debit}</td>
+                    <td class="${c > 0 ? 'text-danger' : ''}">${row.credit}</td>
+                </tr>
+            `;
+        });
+
+        const balanced = totalDebit === totalCredit;
+        html += `
+            <tr class="balance-row">
+                <td colspan="2"><strong>Total</strong></td>
+                <td class="text-success"><strong>$${totalDebit.toFixed(2)}</strong></td>
+                <td class="text-danger"><strong>$${totalCredit.toFixed(2)}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="4" style="border:none;padding-top:4px;">
+                    <span class="${balanced ? 'balanced' : 'unbalanced'}">
+                        ${balanced ? '✅ Balanced — Debits = Credits' : '❌ Unbalanced — Difference: $' + Math.abs(totalDebit - totalCredit).toFixed(2)}
+                    </span>
+                </td>
+            </tr>
+        `;
+
+        tbody.innerHTML = html;
+    }
+
+    // ---- Initialize ----
+    document.addEventListener('DOMContentLoaded', function() {
+        updateDoubleEntry();
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(el => {
+                    el.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
